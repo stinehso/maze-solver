@@ -12,6 +12,12 @@ class Labyrint {
     private boolean print = true;
     private OrdnetLenkeliste<Utvei> utveier;
 
+    /**
+     * Labyrint is the class representing the entire maze from a file
+     * @param   l           2D Rute array for holding all the squares
+     * @param   rader       number of rows
+     * @param   kolonner    number of columns
+     */
     private Labyrint(Rute[][] l, int rader, int kolonner) {
         lab = l;
         this.rader = rader;
@@ -47,7 +53,14 @@ class Labyrint {
     }
 
 
-
+    /**
+     * Read and import a maze from a properly formatted file
+     * The first line of the file states the number of rows and columns
+     * separated by a space. E.g. '5 7' for 5 rows and 7 columns.
+     * The maze itself must be formatted with # representing black space (walls)
+     * and . representing white (open) space (and no enclosing frame)
+     * @param   fil     the file to read
+     */
     public static Labyrint lesFraFil(File fil) throws FileNotFoundException {
         Scanner sc = null;
         try {
@@ -55,7 +68,6 @@ class Labyrint {
         } catch(FileNotFoundException e) {
             throw e;
         }
-
 
         String[] tall = sc.nextLine().split(" ");
         raderTemp = Integer.parseInt(tall[0]);
@@ -92,7 +104,10 @@ class Labyrint {
     }
 
 
-
+    /**
+     * Create a string representation of the maze similar to the input file
+     * @return  complete maze representation
+     */
     public String toString() {
         String tegnrepresentasjon = "";
         for (Rute[] rad : lab) {
@@ -105,7 +120,12 @@ class Labyrint {
     }
 
 
-
+    /**
+     * Look for all paths out from selected square
+     * @param   kol     column of starting point
+     * @param   rad     row of starting point
+     * @return  Koe (FIFO list) of all the paths found represented as strings
+     */
     public Liste<String> finnUtveiFra(int kol, int rad) {
         utveier = new OrdnetLenkeliste<Utvei>();
 
@@ -128,7 +148,10 @@ class Labyrint {
     }
 
 
-
+    /**
+     * Set minimal print to the terminal,
+     * affects all the squares in the maze
+     */
     public void settMinimalUtskrift() {
         print = false;
         for (Rute[] rad : lab) {
@@ -139,19 +162,29 @@ class Labyrint {
     }
 
 
-
+    /**
+     * Add path to global list that allows them to be compared for length
+     * @param   utvei   string representation of the path
+     */
     public void leggTilUtvei(String utvei) {
         Utvei nyUtvei = new Utvei(utvei);
         utveier.settInn(nyUtvei);
     }
 
 
-
+    /**
+    * Return the array of squares
+    * @return   the Rute array
+    */
     public Rute[][] hentRuteArray() {
         return lab;
     }
 
 
+    /**
+     * Return the number of rows and columns in an array, and in that order
+     * @return array containing number of rows and number of columns
+     */
     public int[] hentRader() {
         int[] str = new int[2];
         str[0] = rader;
@@ -159,16 +192,20 @@ class Labyrint {
         return str;
     }
 
-    /*
-    public void skrivUtKoordinater() {
-    for (Rute[] rad : lab) {
-    for (Rute rute : rad) {
-    System.out.print(rute.koord());
-}
-System.out.println("");
-}
-}
-*/
+
+    /**
+     * Print coordinates from each square in its position
+     * (for debugging)
+     */
+    // public void skrivUtKoordinater() {
+    //     for (Rute[] rad : lab) {
+    //         for (Rute rute : rad) {
+    //             System.out.print(rute.koord());
+    //         }
+    //         System.out.println("");
+    //     }
+    // }
+
 
 
 

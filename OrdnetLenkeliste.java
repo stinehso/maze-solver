@@ -3,15 +3,20 @@ import java.util.Iterator;
 
 
 class OrdnetLenkeliste<T extends Comparable<T>> extends Stabel<T> {
-// sortert liste - minste element foerst, stoerste element sist
 
-
+    /**
+     * OrdnetLenkeliste is a sorted list. Smallest element is placed first,
+     * largest at the end
+     */
     OrdnetLenkeliste() {
 
     }
 
 
-
+    /**
+     * Insert element at the beginning of the list
+     * @param   element the element you are inserting
+     */
     public void settInn(T element) {
         Iterator it = iterator();
         if (!it.hasNext()) {                    // hvis lista er tom, legg til med en gang
@@ -42,7 +47,9 @@ class OrdnetLenkeliste<T extends Comparable<T>> extends Stabel<T> {
 
 
 
-    // fjern() tar ut det minste elementet (foerste)
+    /*
+     * fjern() tar ut det minste elementet (foerste)
+     */
 
 
 

@@ -1,13 +1,18 @@
 class Koe<T> extends Stabel<T> {
-// first in, first out
+
     private Node siste;
 
+    /**
+     * first in, first out list
+     */
     Koe() {
-
     }
 
 
-
+    /**
+     * insert element in list
+     * @param   element     element to insert
+     */
     public void settInn(T element) {
         if (foerste == null) {
             foerste = new Node(element);

@@ -9,8 +9,9 @@ class TestMain {
     public static void main(String[] args) {
         File fil = new File("1.in");
         Labyrint lab = null;
-        try{ lab = Labyrint.lesFraFil(fil);
-        }catch (Exception e) {}
+        try {
+            lab = Labyrint.lesFraFil(fil);
+        } catch (Exception e) {}
 
         //System.out.println(lab.toString());
         //lab.skrivUtKoordinater();
