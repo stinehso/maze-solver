@@ -127,7 +127,12 @@ public class MazeSolver extends Application {
 
 
 
-
+    /**
+     * Finds the shortest path out of the maze, and then colors the squares
+     * that are on the path 
+     * @param   kol    column we are starting from
+     * @param   rad    row we are starting from
+     */
     private void fargUtvei(int kol, int rad) {
         labObj.settMinimalUtskrift();
 
