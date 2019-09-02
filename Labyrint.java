@@ -14,6 +14,7 @@ class Labyrint {
 
     /**
      * Labyrint is the class representing the entire maze from a file
+     * See lesFraFil for maze formatting
      * @param   l           2D Rute array for holding all the squares
      * @param   rader       number of rows
      * @param   kolonner    number of columns
@@ -59,7 +60,18 @@ class Labyrint {
      * separated by a space. E.g. '5 7' for 5 rows and 7 columns.
      * The maze itself must be formatted with # representing black space (walls)
      * and . representing white (open) space (and no enclosing frame)
+     * Here is an example:
+     * 8 9
+     * #####.###
+     * #.....#.#
+     * #.#####.#
+     * #.#.....#
+     * #.#.###.#
+     * #.#.#.#.#
+     * #.....#.#
+     * #########
      * @param   fil     the file to read
+     * @return the labyrint object
      */
     public static Labyrint lesFraFil(File fil) throws FileNotFoundException {
         Scanner sc = null;
