@@ -136,15 +136,12 @@ public class MazeSolver extends Application {
 
         Liste<String> utveier = labObj.finnUtveiFra(startKol, startRad);        // selve løsningen av labyrinten gjøres her
 
-        nullstillFarge();
-
         boolean done = false;
         if (!utveier.erTom()) {
             for (String s : utveier) {
                 if (done) {break;}
-                System.out.println(s);
+                //System.out.println(s);
                 boolean[][] losning = losningStringTilTabell(s, i, j);
-                System.out.println(losning);
                 int x = 0;
                 int y = 0;
                 Iterator it = labPane.getChildren().iterator();
@@ -153,17 +150,14 @@ public class MazeSolver extends Application {
                         GUIRute temp = (GUIRute)it.next();
                         if (rute) {
                             temp.oppdaterFarge((float)Math.cos((float)Math.toRadians(x++*0.1)),
-                                y*0.01); //M
-                            done=true; //M
+                                y*0.01);
+                            done=true;
                         }
                         x++;
                     }
                     y++;
                 }
             }
-        }
-        else {
-
         }
     }
 
