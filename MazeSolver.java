@@ -98,11 +98,11 @@ public class MazeSolver extends Application {
         Pane pane;
         Rectangle r;
 
-        if(!labPane.getChildren().isEmpty()) {                 // fjerner tidligere åpnet labPane
+        if(!labPane.getChildren().isEmpty()) {                 // fjerner tidligere åpnet labyrint
             labPane.getChildren().clear();
         }
+
         j = 0;
-        System.out.println(j);
         for (Rute[] rad : lab) {
             i = 0;
             for (Rute rute : rad) {
@@ -112,7 +112,7 @@ public class MazeSolver extends Application {
                     pane = new GUIRute(false, i+1, j+1);
                 }
 
-                GridPane.setMargin(pane, new Insets(5));        // Margin mellom hver enkelt rute
+                GridPane.setMargin(pane, new Insets(5));        // Margin mellom hver enkelt rute, fungerer kun når rutene er store nok
                 labPane.getChildren().add(pane);
                 GridPane.setConstraints(pane, i, j);
                 i++;
@@ -130,6 +130,8 @@ public class MazeSolver extends Application {
         int startRad = rad;
 
         Liste<String> utveier = labObj.finnUtveiFra(startKol, startRad);        // selve løsningen av labyrinten gjøres her
+
+        nullstillFarge();
 
         boolean done = false;
         if (!utveier.erTom()) {
@@ -154,7 +156,6 @@ public class MazeSolver extends Application {
                     y++;
                 }
             }
-
         }
         else {
 
@@ -163,16 +164,25 @@ public class MazeSolver extends Application {
 
 
 
-
+    /**
+     * Iterates through squares to reset colors to original grey and black
+     */
+    private void nullstillFarge() {
+        Iterator it = labPane.getChildren().iterator();
+        while (it.hasNext()) {
+            GUIRute temp = (GUIRute)it.next();
+            temp.oppdaterFarge();
+        }
+    }
 
 
 
     /**
-    * Konverterer losning-String fra oblig 5 til en boolean[][]-representasjon
+    * Konverterer losning-String til en boolean[][]-representasjon
     * av losningstien.
     * @param losningString String-representasjon av utveien
-    * @param bredde        bredde til labPaneen
-    * @param hoyde         hoyde til labPaneen
+    * @param bredde        bredde til labyrinten
+    * @param hoyde         hoyde til labyrinten
     * @return              2D-representasjon av rutene der true indikerer at
     *                      ruten er en del av utveien.
     */
@@ -192,11 +202,21 @@ public class MazeSolver extends Application {
 
 
 
+
+
+
     private class GUIRute extends Pane {
         boolean hvit;
         int kol, rad;
         Rectangle r;
+        boolean klikkPaaVegg = false;
 
+        /**
+         * The class GUIRute holds properties for each square in the maze
+         * @param   hvit    boolean that is true if this is a white square
+         * @param   kol     the column we are in
+         * @param   rad     the row we are in
+         */
         public GUIRute(boolean hvit, int kol, int rad) {
             super();
             this.hvit = hvit;
@@ -204,8 +224,9 @@ public class MazeSolver extends Application {
             this.rad = rad;
 
             setStyle("-fx-background-color: white;");
-            setPrefSize(60, 60);
-            r = new Rectangle(60, 60);
+            //setPrefSize(60, 60);
+
+            r = new Rectangle(60, 60);                 // la Rute inneholde et kvadrat som enkelt kan farges
             if (hvit) {
                 r.setFill(Color.GAINSBORO);
             } else {
@@ -216,29 +237,62 @@ public class MazeSolver extends Application {
             setOnMouseClicked(new EventHandler<MouseEvent>() {
                 public void handle(MouseEvent event) {
                     if(hvit) {
-                        start = new int[2];
-                        start[0] = kol;
-                        start[1] = rad;
-                        fargUtvei(start[0], start[1]);
+                        nullstillFarge();
+                        fargUtvei(kol, rad);
+                    } else {
+                        System.out.println("It is very dark inside the wall");
+                        r.setFill(Color.FIREBRICK);
+                        klikkPaaVegg = true;
                     }
                 }
             });
+
+            setOnMouseExited(
+                event -> {
+                    if(klikkPaaVegg) {
+                        System.out.println("Phew");
+                        r.setFill(Color.BLACK);
+                        klikkPaaVegg = false;
+                    }
+                }
+            );
+
+            // setOnMouseExited(new EventHandler<MouseEvent>() {
+            //     public void handle(MouseEvent event) {
+            //         if(klikkPaaVegg) {
+            //             System.out.println("exit square");
+            //             r.setFill(Color.BLUE);
+            //             klikkPaaVegg = false;
+            //         }
+            //     }
+            // });
         }
 
 
+
+        /**
+         * Fills the square with a color calculated from the coordinates for an
+         * ombre feel
+         * @param   x   float, scaled and varied version of x coordinate
+         * @param   y   double, scaled version of y coordinate
+         */
         public void oppdaterFarge(float x, double y) {
-            //setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
-
-            Color mathiasfarge = Color.color(0,Math.abs(x-y)/2,Math.abs(x-y)/2); //m
-            r.setFill(mathiasfarge); //M
-            //r.setFill(Color.GREEN);
-            //System.out.println(kol + "," + rad);
+            Color mathiasfarge = Color.color(0,Math.abs(x-y)/2,Math.abs(x-y)/2);
+            r.setFill(mathiasfarge);
         }
 
 
-        //pane.setBorder(new Border(new BorderStroke(Color.RED, null, null, new BorderWidths(5.0))));
-        //pane.setPadding(new Insets(5.0));
-
+        /**
+         * Resets colors to original grey and black
+         */
+        public void oppdaterFarge() {
+            if (hvit) {
+                r.setFill(Color.GAINSBORO);
+            } else {
+                r.setFill(Color.BLACK);
+            }
+        }
 
     }
+
 }
