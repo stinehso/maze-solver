@@ -33,7 +33,7 @@ public class MazeSolver extends Application {
     Labyrint labObj;
     Rute[][] lab;
     int[] start;
-    int i, j = 0;
+    int i, j = 0;                                               // Brukes til bredde og høyde av tabell
 
     public static void main(String[] args) {
         launch(args);
@@ -44,10 +44,8 @@ public class MazeSolver extends Application {
     public void start(Stage vindu) {
         this.vindu = vindu;
         BorderPane rot = new BorderPane();
-        labPane = new GridPane();
-        //labPane.setPadding(new Insets(5.0));
-        //labPane.setBackground(new Background(new BackgroundFill(Color.LIGHTSTEELBLUE, null, null)));
 
+        labPane = new GridPane();
         rot.setCenter(labPane);                                // Plasserer labyrinten som et grid midt i bildet
         BorderPane.setMargin(labPane, new Insets(60));         // Margin på alle sider av gridet
 
@@ -61,14 +59,12 @@ public class MazeSolver extends Application {
         });
         rot.setTop(open);                                       // Plasserer knappen 'åpne' øverst i bildet
 
-
-
         Scene scene = new Scene(rot, 500, 500);                 // TODO mulig fjerne tall, spesifisere lenger ned
         vindu.setScene(scene);
         vindu.setTitle("Labyrintløser");
         vindu.show();
-
     }
+
 
 
     /**
@@ -81,6 +77,7 @@ public class MazeSolver extends Application {
         filleser.getExtensionFilters().addAll(
         new ExtensionFilter("Labyrintfil", "*.in"),
         new ExtensionFilter("All Files", "*.*"));
+
         try {
             File valgtFil = filleser.showOpenDialog(vindu);
             labObj = Labyrint.lesFraFil(valgtFil);
@@ -90,8 +87,10 @@ public class MazeSolver extends Application {
     }
 
 
+
     /**
-     *
+     * Create panes in the UI from the array of the Labyrint object
+     * Uses the custom class GUIRute for each pane, which each is a square in the maze
      */
     private void lagGrid() {
         lab = labObj.hentRuteArray();                          // henter selve arrayet
@@ -102,16 +101,18 @@ public class MazeSolver extends Application {
         if(!labPane.getChildren().isEmpty()) {                 // fjerner tidligere åpnet labPane
             labPane.getChildren().clear();
         }
+        j = 0;
+        System.out.println(j);
         for (Rute[] rad : lab) {
             i = 0;
             for (Rute rute : rad) {
                 if(rute instanceof HvitRute) {
-                    pane = new GUIRute(true, i+1, j+1);
+                    pane = new GUIRute(true, i+1, j+1);         // GUIRute objekt representerer en enkelt rute i arrayet
                 } else {
                     pane = new GUIRute(false, i+1, j+1);
                 }
 
-                GridPane.setMargin(pane, new Insets(5));
+                GridPane.setMargin(pane, new Insets(5));        // Margin mellom hver enkelt rute
                 labPane.getChildren().add(pane);
                 GridPane.setConstraints(pane, i, j);
                 i++;
@@ -121,18 +122,22 @@ public class MazeSolver extends Application {
     }
 
 
+
     private void fargUtvei(int kol, int rad) {
         labObj.settMinimalUtskrift();
+
         int startKol = kol;
         int startRad = rad;
-        Liste<String> utveier = labObj.finnUtveiFra(startKol, startRad);
-        boolean done=false; //m
+
+        Liste<String> utveier = labObj.finnUtveiFra(startKol, startRad);        // selve løsningen av labyrinten gjøres her
+
+        boolean done = false;
         if (!utveier.erTom()) {
             for (String s : utveier) {
-                if(done){break;} //M
+                if (done) {break;}
                 System.out.println(s);
                 boolean[][] losning = losningStringTilTabell(s, i, j);
-                //System.out.println(losning);
+                System.out.println(losning);
                 int x = 0;
                 int y = 0;
                 Iterator it = labPane.getChildren().iterator();
@@ -149,6 +154,9 @@ public class MazeSolver extends Application {
                     y++;
                 }
             }
+
+        }
+        else {
 
         }
     }
