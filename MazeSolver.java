@@ -48,6 +48,7 @@ public class MazeSolver extends Application {
         labPane = new GridPane();
         rot.setCenter(labPane);                                // Plasserer labyrinten som et grid midt i bildet
         BorderPane.setMargin(labPane, new Insets(60));         // Margin på alle sider av gridet
+        BorderPane.setAlignment(labPane, Pos.CENTER);
 
         Button open = new Button("Åpne fil");
         open.setOnAction(new EventHandler<ActionEvent>() {
@@ -58,6 +59,8 @@ public class MazeSolver extends Application {
             }
         });
         rot.setTop(open);                                       // Plasserer knappen 'åpne' øverst i bildet
+        BorderPane.setMargin(open, new Insets(10));
+        BorderPane.setAlignment(open, Pos.CENTER);
 
         Scene scene = new Scene(rot, 500, 500);                 // TODO mulig fjerne tall, spesifisere lenger ned
         vindu.setScene(scene);
@@ -115,11 +118,13 @@ public class MazeSolver extends Application {
                 GridPane.setMargin(pane, new Insets(5));        // Margin mellom hver enkelt rute, fungerer kun når rutene er store nok
                 labPane.getChildren().add(pane);
                 GridPane.setConstraints(pane, i, j);
+                //pane.prefWidthProperty().bind(labPane.widthProperty());   // TODO prøver å hindre rutene på enden å blø utover
                 i++;
             }
             j++;
         }
     }
+
 
 
 
