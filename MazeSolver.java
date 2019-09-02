@@ -27,24 +27,29 @@ import java.lang.*; //M
 
 
 
-public class Oblig7 extends Application {
+public class MazeSolver extends Application {
     Stage vindu;
-    GridPane labyrint;
-    Labyrint l;
+    GridPane labPane;
+    Labyrint labObj;
     Rute[][] lab;
     int[] start;
     int i, j = 0;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 
     @Override
     public void start(Stage vindu) {
         this.vindu = vindu;
         BorderPane rot = new BorderPane();
-        labyrint = new GridPane();
-        //labyrint.setPadding(new Insets(5.0));
-        //labyrint.setBackground(new Background(new BackgroundFill(Color.LIGHTSTEELBLUE, null, null)));
+        labPane = new GridPane();
+        //labPane.setPadding(new Insets(5.0));
+        //labPane.setBackground(new Background(new BackgroundFill(Color.LIGHTSTEELBLUE, null, null)));
 
-        rot.setCenter(labyrint);
-        BorderPane.setMargin(labyrint, new Insets(60));
+        rot.setCenter(labPane);                                // Plasserer labyrinten som et grid midt i bildet
+        BorderPane.setMargin(labPane, new Insets(60));         // Margin på alle sider av gridet
 
         Button open = new Button("Åpne fil");
         open.setOnAction(new EventHandler<ActionEvent>() {
@@ -54,17 +59,22 @@ public class Oblig7 extends Application {
                 lagGrid();
             }
         });
-        rot.setTop(open);
+        rot.setTop(open);                                       // Plasserer knappen 'åpne' øverst i bildet
 
 
 
-        Scene scene = new Scene(rot, 500, 500);
+        Scene scene = new Scene(rot, 500, 500);                 // TODO mulig fjerne tall, spesifisere lenger ned
         vindu.setScene(scene);
         vindu.setTitle("Labyrintløser");
         vindu.show();
 
     }
 
+
+    /**
+     * Open file dialog with filters for custom .in files or all files,
+     * read chosen file into Labyrint object
+     */
     private void lesInnFil() {
         FileChooser filleser = new FileChooser();
         filleser.setTitle("Åpne fil");
@@ -73,23 +83,24 @@ public class Oblig7 extends Application {
         new ExtensionFilter("All Files", "*.*"));
         try {
             File valgtFil = filleser.showOpenDialog(vindu);
-
-            l = Labyrint.lesFraFil(valgtFil);
-
+            labObj = Labyrint.lesFraFil(valgtFil);
         } catch(FileNotFoundException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
 
+    /**
+     *
+     */
     private void lagGrid() {
-        lab = l.hentRuteArray();
-
-        int[] str = l.hentRader();
+        lab = labObj.hentRuteArray();                          // henter selve arrayet
+        int[] str = labObj.hentRader();                        // henter dimensjonene
         Pane pane;
         Rectangle r;
-        if(!labyrint.getChildren().isEmpty()) {
-            labyrint.getChildren().clear();
+
+        if(!labPane.getChildren().isEmpty()) {                 // fjerner tidligere åpnet labPane
+            labPane.getChildren().clear();
         }
         for (Rute[] rad : lab) {
             i = 0;
@@ -101,7 +112,7 @@ public class Oblig7 extends Application {
                 }
 
                 GridPane.setMargin(pane, new Insets(5));
-                labyrint.getChildren().add(pane);
+                labPane.getChildren().add(pane);
                 GridPane.setConstraints(pane, i, j);
                 i++;
             }
@@ -111,10 +122,10 @@ public class Oblig7 extends Application {
 
 
     private void fargUtvei(int kol, int rad) {
-        l.settMinimalUtskrift();
+        labObj.settMinimalUtskrift();
         int startKol = kol;
         int startRad = rad;
-        Liste<String> utveier = l.finnUtveiFra(startKol, startRad);
+        Liste<String> utveier = labObj.finnUtveiFra(startKol, startRad);
         boolean done=false; //m
         if (!utveier.erTom()) {
             for (String s : utveier) {
@@ -124,7 +135,7 @@ public class Oblig7 extends Application {
                 //System.out.println(losning);
                 int x = 0;
                 int y = 0;
-                Iterator it = labyrint.getChildren().iterator();
+                Iterator it = labPane.getChildren().iterator();
                 for (boolean[] raden : losning) {
                     for (boolean rute : raden) {
                         GUIRute temp = (GUIRute)it.next();
@@ -152,8 +163,8 @@ public class Oblig7 extends Application {
     * Konverterer losning-String fra oblig 5 til en boolean[][]-representasjon
     * av losningstien.
     * @param losningString String-representasjon av utveien
-    * @param bredde        bredde til labyrinten
-    * @param hoyde         hoyde til labyrinten
+    * @param bredde        bredde til labPaneen
+    * @param hoyde         hoyde til labPaneen
     * @return              2D-representasjon av rutene der true indikerer at
     *                      ruten er en del av utveien.
     */
