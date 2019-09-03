@@ -14,7 +14,7 @@ class HvitRute extends Rute {
      * @return  symbol representing white space or path
      */
     public char tilTegn() {
-        if (paaVeien) return '*';
+        if (paaVeien) return '.';
         return ' ';
     }
 }
